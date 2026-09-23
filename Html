@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investi e Cresce Money | Plataforma de Investimento</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#0a0e17',
+                            dark: '#111827',
+                            card: '#1f2937',
+                            green: '#10b981',
+                            neon: '#00ff87',
+                            hover: '#059669'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0e17;
+            color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .glow-green {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        .glow-neon {
+            text-shadow: 0 0 10px rgba(0, 255, 135, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen custom-scrollbar">
+
+    <!-- TOP BAR DE SEGURANÇA -->
+    <div class="bg-black/80 border-b border-brand-green/20 py-1.5 px-4 text-xs flex justify-between items-center text-gray-400">
+        <div class="flex items-center space-x-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span>
+            <span class="text-brand-green font-semibold"><i class="fa-solid fa-shield-halved mr-1"></i> Servidor Seguro Encaminhado SSL 256-Bit</span>
+        </div>
+        <div class="hidden sm:flex items-center space-x-4">
+            <span><i class="fa-solid fa-lock mr-1 text-brand-neon"></i> Proteção Anti-Fraude Ativa</span>
+            <span><i class="fa-solid fa-headset mr-1 text-brand-neon"></i> Suporte 24/7</span>
+        </div>
+    </div>
+
+    <!-- MENU DE NAVEGAÇÃO HORIZONTAL -->
+    <header class="bg-brand-dark/90 backdrop-blur-md border-b border-gray-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- LOGO -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-green to-brand-neon flex items-center justify-center text-brand-black text-xl font-extrabold shadow-lg">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-wider text-white">INVESTI E CRESCE</span>
+                        <span class="text-xs block text-brand-neon font-mono font-bold">MONEY 8X AUTOMÁTICO</span>
+                    </div>
+                </div>
+
+                <!-- MENU HORIZONTAL (DESKTOP) -->
+                <nav class="hidden md:flex space-x-1">
+                    <button onclick="switchTab('dashboard')" class="nav-btn active flex items-center px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-card hover:text-brand-neon transition">
+                        <i class="fa-solid fa-gauge mr-2 text-brand-green"></i> Dashboard
+                    </button>
+                    <button onclick="switchTab('carteira')" class="nav-btn flex items-center px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-card hover:text-brand-neon transition">
+                        <i class="fa-solid fa-wallet mr-2 text-brand-green"></i> Carteira
+                    </button>
+                    <button onclick="switchTab('deposito')" class="nav-btn flex items-center px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-card hover:text-brand-neon transition">
+                        <i class="fa-solid fa-money-bill-trend-up mr-2 text-brand-green"></i> Depositar (1.000 Kz)
+                    </button>
+                    <button onclick="switchTab('levantamento')" class="nav-btn flex items-center px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-card hover:text-brand-neon transition">
+                        <i class="fa-solid fa-hand-holding-dollar mr-2 text-brand-green"></i> Levantar
+                    </button>
+                    <button onclick="switchTab('guia')" class="nav-btn flex items-center px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-card hover:text-brand-neon transition">
+                        <i class="fa-solid fa-circle-info mr-2 text-brand-green"></i> Guia & Ajuda
+                    </button>
+                    <button onclick="switchTab('admin')" class="nav-btn flex items-center px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-card hover:text-brand-neon transition">
+                        <i class="fa-solid fa-user-shield mr-2 text-brand-green"></i> Admin / Perfil
+                    </button>
+                </nav>
+
+                <!-- USUÁRIO RESUMO / NOTIFICAÇÃO -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs text-gray-400">Olá, Investidor</p>
+                        <p class="text-sm font-bold text-brand-neon">Conta Ativa (8X)</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full border-2 border-brand-green p-0.5">
+                        <img src="https://ui-avatars.com/api/?name=Utilizador+Angola&background=10b981&color=fff" class="rounded-full w-full h-full object-cover" alt="Perfil">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NOTIFICAÇÕES EM TEMPO REAL (TOAST FLUTUANTE) -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2"></div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- ================= PAINEL DASHBOARD ================= -->
+        <div id="tab-dashboard" class="tab-content block space-y-6">
+            
+            <!-- BANNER DE DESTAQUE DE INVESTIMENTO -->
+            <div class="bg-gradient-to-r from-brand-card via-gray-900 to-brand-card p-6 rounded-2xl border border-brand-green/30 glow-green relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-brand-green text-9xl">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-brand-green/20 text-brand-neon border border-brand-green/40 rounded-full text-xs font-semibold mb-2">
+                            <i class="fa-solid fa-robot mr-1"></i> Sistema Automático Ligado
+                        </span>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Multiplicador Automático <span class="text-brand-neon">8X</span></h1>
+                        <p class="text-gray-300 text-sm mt-1">Invista <span class="text-white font-bold">1.000 Kz</span> e receba <span class="text-brand-neon font-bold">+500 Kz diários</span> em rendimento contínuo até triplicar 8 vezes!</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="switchTab('deposito')" class="bg-gradient-to-r from-brand-green to-emerald-600 hover:from-brand-hover hover:to-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center">
+                            <i class="fa-solid fa-plus-circle mr-2"></i> Fazer Depósito 1.000 Kz
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARDS DE SALDO E ESTATÍSTICAS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Saldo Atual -->
+                <div class="bg-brand-card p-5 rounded-xl border border-gray-800">
+                    <div class="flex justify-between items-center text-gray-400 mb-2">
+                        <span class="text-xs uppercase font-bold tracking-wider">Saldo na Carteira</span>
+                        <i class="fa-solid fa-wallet text-brand-green"></i>
+                    </div>
+                    <div class="text-2xl font-black text-white" id="saldo-display">8.500,00 Kz</div>
+                    <p class="text-xs text-brand-green mt-1 flex items-center">
+                        <i class="fa-solid fa-arrow-up mr-1"></i> +500 Kz/dia no automático
+                    </p>
+                </div>
+
+                <!-- Ganho Diário -->
+                <div class="bg-brand-card p-5 rounded-xl border border-gray-800">
+                    <div class="flex justify-between items-center text-gray-400 mb-2">
+                        <span class="text-xs uppercase font-bold tracking-wider">Ganho Diário Fixo</span>
+                        <i class="fa-solid fa-calendar-check text-brand-green"></i>
+                    </div>
+                    <div class="text-2xl font-black text-brand-neon">+500,00 Kz</div>
+                    <p class="text-xs text-gray-400 mt-1">Creditado a cada 24 Horas</p>
+                </div>
+
+                <!-- Progresso Multiplicador 8x -->
+                <div class="bg-brand-card p-5 rounded-xl border border-gray-800">
+                    <div class="flex justify-between items-center text-gray-400 mb-2">
+                        <span class="text-xs uppercase font-bold tracking-wider">Multiplicação 8X</span>
+                        <i class="fa-solid fa-layer-group text-brand-green"></i>
+                    </div>
+                    <div class="text-2xl font-black text-white">Ciclo 4 / 8</div>
+                    <div class="w-full bg-gray-700 h-2 rounded-full mt-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-brand-green to-brand-neon h-full w-1/2"></div>
+                    </div>
+                </div>
+
+                <!-- Levantamento Mínimo -->
+                <div class="bg-brand-card p-5 rounded-xl border border-gray-800">
+                    <div class="flex justify-between items-center text-gray-400 mb-2">
+                        <span class="text-xs uppercase font-bold tracking-wider">Levantamento Mínimo</span>
+                        <i class="fa-solid fa-money-bill-transfer text-brand-green"></i>
+                    </div>
+                    <div class="text-2xl font-black text-white">3.000,00 Kz</div>
+                    <p class="text-xs text-emerald-400 mt-1 flex items-center">
+                        <i class="fa-solid fa-circle-check mr-1"></i> Saldo elegível para saque
+                    </p>
+                </div>
+            </div>
+
+            <!-- GRÁFICO DE CRESCIMENTO EM TEMPO REAL -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-brand-card p-6 rounded-2xl border border-gray-800">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Histórico de Crescimento do Investimento</h2>
+                            <p class="text-xs text-gray-400">Acompanhamento do saldo acumulado e previsões de rendimento</p>
+                        </div>
+                        <span class="px-3 py-1 bg-brand-green/10 text-brand-neon border border-brand-green/30 rounded-full text-xs">
+                            <i class="fa-solid fa-chart-line mr-1"></i> Automático
+                        </span>
+                    </div>
+                    <div class="h-64 sm:h-80 w-full">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- PAINEL DE RENDIMENTO AO VIVO -->
+                <div class="bg-brand-card p-6 rounded-2xl border border-gray-800 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-white mb-2">Simulador de Mineração Diária</h2>
+                        <p class="text-xs text-gray-400 mb-4">O seu capital gera lucros automaticamente segundo a segundo.</p>
+                        
+                        <div class="bg-black/50 p-4 rounded-xl border border-brand-green/30 text-center my-4">
+                            <span class="text-xs text-gray-400 uppercase tracking-widest block mb-1">Lucro Gerado Hoje</span>
+                            <div class="text-3xl font-mono font-black text-brand-neon glow-neon" id="live-counter">
+                                +348.25 Kz
+                            </div>
+                            <span class="text-[10px] text-brand-green flex items-center justify-center mt-2">
+                                <i class="fa-solid fa-arrows-rotate animate-spin mr-1"></i> A processar ganhos diários
+                            </span>
+                        </div>
+
+                        <div class="space-y-3 text-xs text-gray-300">
+                            <div class="flex justify-between border-b border-gray-800 pb-2">
+                                <span>Valor Depositado Inicial:</span>
+                                <span class="font-bold text-white">1.000,00 Kz</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-800 pb-2">
+                                <span>Multiplicação Acumulada:</span>
+                                <span class="font-bold text-brand-neon">Triplicado x8</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-800 pb-2">
+                                <span>Taxa de Processamento:</span>
+                                <span class="font-bold text-brand-green">0.00 Kz (Isento)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="switchTab('levantamento')" class="w-full mt-4 bg-brand-green hover:bg-brand-hover text-black font-extrabold py-3 rounded-xl transition text-center flex justify-center items-center">
+                        <i class="fa-solid fa-download mr-2"></i> Levantar Rendimentos
+                    </button>
+                </div>
+            </div>
+
+            <!-- HISTÓRICO DE NOTIFICAÇÕES DA COMUNIDADE -->
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800">
+                <h3 class="text-md font-bold text-white mb-4 flex items-center">
+                    <i class="fa-solid fa-bell text-brand-green mr-2"></i> Transações Recentes na Plataforma (Ao Vivo)
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-300">
+                        <thead class="bg-black/40 text-gray-400 uppercase">
+                            <tr>
+                                <th class="p-3">Utilizador</th>
+                                <th class="p-3">Operação</th>
+                                <th class="p-3">Valor</th>
+                                <th class="p-3">Método</th>
+                                <th class="p-3">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800" id="live-transactions-table">
+                            <!-- Inserido por JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= PAINEL DE DEPÓSITO ================= -->
+        <div id="tab-deposito" class="tab-content hidden space-y-6">
+            <div class="max-w-3xl mx-auto bg-brand-card p-6 sm:p-8 rounded-2xl border border-brand-green/30">
+                <div class="text-center mb-8">
+                    <span class="p-3 rounded-full bg-brand-green/10 text-brand-neon inline-block mb-3">
+                        <i class="fa-solid fa-money-bill-trend-up text-2xl"></i>
+                    </span>
+                    <h2 class="text-2xl font-black text-white">Efetuar Depósito de Investimento</h2>
+                    <p class="text-gray-400 text-sm mt-1">Valor Fixo de Entrada: <span class="text-brand-neon font-bold">1.000,00 Kz</span></p>
+                </div>
+
+                <!-- REGRAS DE DEPÓSITO -->
+                <div class="bg-black/40 border border-gray-800 p-4 rounded-xl mb-6 text-xs text-gray-300 space-y-2">
+                    <p class="font-bold text-brand-green flex items-center"><i class="fa-solid fa-circle-check mr-2"></i> Termos de Investimento Ativo:</p>
+                    <ul class="list-disc list-inside space-y-1 text-gray-400">
+                        <li>Ao depositar **1.000 Kz**, a sua conta ativa o crescimento automático de **+500 Kz diários**.</li>
+                        <li>O investimento triplica até **8 vezes** de forma totalmente automática.</li>
+                        <li>O depósito é confirmado instantaneamente via IBAN ou Entidade/Referência.</li>
+                    </ul>
+                </div>
+
+                <!-- DADOS PARA DEPÓSITO (ENTIDADE / REFERÊNCIA / IBAN) -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Dados Oficiais para Depósito Express</h3>
+                    
+                    <!-- OPÇÃO 1: ENTIDADE E REFERÊNCIA MULTICAIXA -->
+                    <div class="bg-black p-4 rounded-xl border border-brand-green/40 relative">
+                        <span class="absolute top-3 right-3 bg-brand-green text-black text-[10px] font-bold px-2 py-0.5 rounded">Recomendado</span>
+                        <div class="text-xs text-gray-400 font-bold mb-3 flex items-center">
+                            <i class="fa-solid fa-credit-card text-brand-green mr-2"></i> PAGAMENTO POR ENTIDADE E REFERÊNCIA
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+                                <span class="text-[10px] text-gray-400 block">ENTIDADE</span>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-lg font-mono font-bold text-white">10203</span>
+                                    <button onclick="copyText('10203')" class="text-brand-neon hover:text-white text-xs"><i class="fa-solid fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+                                <span class="text-[10px] text-gray-400 block">REFERÊNCIA</span>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-lg font-mono font-bold text-white">928 374 102</span>
+                                    <button onclick="copyText('928374102')" class="text-brand-neon hover:text-white text-xs"><i class="fa-solid fa-copy"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OPÇÃO 2: TRANSFERÊNCIA POR IBAN -->
+                    <div class="bg-black p-4 rounded-xl border border-gray-800">
+                        <div class="text-xs text-gray-400 font-bold mb-2 flex items-center">
+                            <i class="fa-solid fa-building-columns text-brand-green mr-2"></i> TRANSFERÊNCIA BANCÁRIA (IBAN)
+                        </div>
+                        <div class="bg-gray-900 p-3 rounded-lg border border-gray-800">
+                            <span class="text-[10px] text-gray-400 block">BANCO / NÚMERO DE IBAN</span>
+                            <div class="flex justify-between items-center mt-1">
+                                <span class="text-xs sm:text-sm font-mono text-white font-bold break-all">AO06 0040 0000 1234 5678 9012 3</span>
+                                <button onclick="copyText('AO06004000001234567890123')" class="text-brand-neon hover:text-white text-xs ml-2"><i class="fa-solid fa-copy"></i> Copiar</button>
+                            </div>
+                            <span class="text-[10px] text-gray-500 block mt-1">Titular: Investi e Cresce Money Lda</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORMULÁRIO DE CONFIRMAÇÃO DE DEPOSITANTE -->
+                <form onsubmit="confirmDeposit(event)" class="mt-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Anexar Comprovativo ou Nº de Transação</label>
+                        <input type="text" required placeholder="Ex: TXN-98127391823" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-brand-green focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Valor Depositado (Kz)</label>
+                        <input type="number" value="1000" readonly class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm text-brand-neon font-bold cursor-not-allowed">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-brand-green to-emerald-600 hover:from-brand-hover hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition">
+                        <i class="fa-solid fa-check-circle mr-2"></i> Confirmar Depósito de 1.000 Kz
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= PAINEL DE LEVANTAMENTO ================= -->
+        <div id="tab-levantamento" class="tab-content hidden space-y-6">
+            <div class="max-w-3xl mx-auto bg-brand-card p-6 sm:p-8 rounded-2xl border border-brand-green/30">
+                <div class="text-center mb-8">
+                    <span class="p-3 rounded-full bg-brand-green/10 text-brand-neon inline-block mb-3">
+                        <i class="fa-solid fa-hand-holding-dollar text-2xl"></i>
+                    </span>
+                    <h2 class="text-2xl font-black text-white">Solicitar Levantamento</h2>
+                    <p class="text-gray-400 text-sm mt-1">Levantamento Mínimo Exigido: <span class="text-brand-neon font-bold">3.000,00 Kz</span></p>
+                </div>
+
+                <div class="bg-black/40 border border-gray-800 p-4 rounded-xl mb-6 flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-gray-400 block">Saldo Disponível na Carteira</span>
+                        <span class="text-xl font-bold text-brand-neon" id="saldo-levantamento-display">8.500,00 Kz</span>
+                    </div>
+                    <span class="px-3 py-1 bg-brand-green/20 text-brand-green text-xs rounded-full font-semibold">
+                        <i class="fa-solid fa-check mr-1"></i> Apto para Saque
+                    </span>
+                </div>
+
+                <form onsubmit="processWithdrawal(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Montante a Levantar (Mínimo 3.000 Kz)</label>
+                        <input type="number" id="withdraw-amount" min="3000" value="3000" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-brand-green focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Selecione o Método de Recebimento</label>
+                        <select class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-brand-green focus:outline-none">
+                            <option>Multicaixa Express / IBAN Bancário</option>
+                            <option>Transferência Direta (BAI, BFA, BIC, SOL, ATLANTICO)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Seu IBAN de Destino</label>
+                        <input type="text" placeholder="AO06 0000 0000 0000 0000 0000 0" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm text-white font-mono focus:border-brand-green focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-300 mb-1">Nome Completo do Titular da Conta</label>
+                        <input type="text" required placeholder="Nome igual ao do IBAN" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-brand-green focus:outline-none">
+                    </div>
+
+                    <button type="submit" class="w-full bg-brand-green hover:bg-brand-hover text-black font-extrabold py-3.5 rounded-xl shadow-lg transition flex justify-center items-center">
+                        <i class="fa-solid fa-paper-plane mr-2"></i> Processar Levantamento Agora
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= PAINEL CARTEIRA ================= -->
+        <div id="tab-carteira" class="tab-content hidden space-y-6">
+            <div class="bg-brand-card p-6 rounded-2xl border border-gray-800">
+                <h2 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-wallet text-brand-green mr-2"></i> Minha Carteira & Extrato</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-black/50 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400">Total Depositado</span>
+                        <div class="text-xl font-bold text-white">1.000,00 Kz</div>
+                    </div>
+                    <div class="bg-black/50 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400">Rendimento Acumulado</span>
+                        <div class="text-xl font-bold text-brand-neon">+7.500,00 Kz</div>
+                    </div>
+                    <div class="bg-black/50 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs text-gray-400">Total Levantado</span>
+                        <div class="text-xl font-bold text-emerald-400">0,00 Kz</div>
+                    </div>
+                </div>
+
+                <h3 class="text-sm font-bold text-white mb-3">Histórico Pessoal de Movimentos</h3>
+                <div class="space-y-2">
+                    <div class="bg-gray-900 p-3 rounded-lg flex justify-between items-center text-xs">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-full bg-brand-green/20 text-brand-neon flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span>
+                            <div>
+                                <p class="font-bold text-white">Rendimento Diário Automático</p>
+                                <p class="text-gray-500">Hoje às 08:00</p>
+                            </div>
+                        </div>
+                        <span class="text-brand-neon font-bold text-sm">+500,00 Kz</span>
+                    </div>
+                    <div class="bg-gray-900 p-3 rounded-lg flex justify-between items-center text-xs">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-full bg-brand-green/20 text-brand-neon flex items-center justify-center"><i class="fa-solid fa-plus"></i></span>
+                            <div>
+                                <p class="font-bold text-white">Depósito Inicial Confirmado</p>
+                                <p class="text-gray-500">Ontem via Entidade/Ref</p>
+                            </div>
+                        </div>
+                        <span class="text-white font-bold text-sm">+1.000,00 Kz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= GUIA & AJUDA DE ORIENTAÇÃO ================= -->
+        <div id="tab-guia" class="tab-content hidden space-y-6">
+            <div class="bg-brand-card p-6 sm:p-8 rounded-2xl border border-gray-800 space-y-6">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-white mb-2"><i class="fa-solid fa-graduation-cap text-brand-green mr-2"></i> Guia Oficial de Funcionamento</h2>
+                    <p class="text-gray-400 text-sm">Aprenda detalhadamente como realizar seus depósitos, acompanhar o rendimento e fazer levantamentos com total segurança.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Passo 1 -->
+                    <div class="bg-black/50 p-5 rounded-xl border border-gray-800 relative">
+                        <span class="w-8 h-8 rounded-full bg-brand-green text-black font-extrabold flex items-center justify-center mb-3">1</span>
+                        <h3 class="text-base font-bold text-white mb-2">Como Depositar (1.000 Kz)</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Acesse a aba <strong>Depositar</strong>, copie a <strong>Entidade (10203)</strong> e a <strong>Referência</strong> ou o nosso <strong>IBAN</strong>. Dirija-se ao Multicaixa ou app Express e efetue o pagamento de exatamente 1.000 Kz.
+                        </p>
+                    </div>
+
+                    <!-- Passo 2 -->
+                    <div class="bg-black/50 p-5 rounded-xl border border-gray-800 relative">
+                        <span class="w-8 h-8 rounded-full bg-brand-green text-black font-extrabold flex items-center justify-center mb-3">2</span>
+                        <h3 class="text-base font-bold text-white mb-2">Crescimento Automático 8X</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Assim que o depósito é ativado, o sistema gera automaticamente <strong>+500 Kz por dia</strong> na sua conta. O processo triplica até 8 vezes no ciclo de investimento ativado.
+                        </p>
+                    </div>
+
+                    <!-- Passo 3 -->
+                    <div class="bg-black/50 p-5 rounded-xl border border-gray-800 relative">
+                        <span class="w-8 h-8 rounded-full bg-brand-green text-black font-extrabold flex items-center justify-center mb-3">3</span>
+                        <h3 class="text-base font-bold text-white mb-2">Como Levantar (+3.000 Kz)</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Quando o seu saldo atingir o limite mínimo de <strong>3.000 Kz</strong>, aceda à aba <strong>Levantar</strong>, insira o seu IBAN e confirme. O valor cai na sua conta bancária num prazo máximo de 15 minutos.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-brand-green/10 p-4 rounded-xl border border-brand-green/30 flex items-center space-x-3">
+                    <i class="fa-solid fa-shield-virus text-brand-neon text-2xl"></i>
+                    <div class="text-xs">
+                        <span class="font-bold text-white block">Garantia e Segurança da Plataforma:</span>
+                        <span class="text-gray-300">Todas as transações são auditadas com protocolo SSL de ponta a ponta e liquidação direta em Kwanzas (Kz).</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PERFIL DE ADMINISTRADOR / USUÁRIO ================= -->
+        <div id="tab-admin" class="tab-content hidden space-y-6">
+            <div class="bg-brand-card p-6 sm:p-8 rounded-2xl border border-gray-800">
+                <div class="flex items-center space-x-4 mb-6 border-b border-gray-800 pb-6">
+                    <img src="https://ui-avatars.com/api/?name=Admin+Investi&background=10b981&color=fff" class="w-16 h-16 rounded-full border-2 border-brand-neon" alt="Admin">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-white">Perfil do Utilizador / Painel Admin</h2>
+                        <span class="text-xs bg-brand-green/20 text-brand-neon px-2 py-1 rounded font-mono">Nível: Administrador Principal</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Dados do Utilizador</h3>
+                        <div>
+                            <label class="text-xs text-gray-400 block">Nome Registado</label>
+                            <input type="text" value="Investidor VIP Angola" readonly class="w-full bg-gray-900 border border-gray-800 rounded p-2.5 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block">E-mail do Perfil</label>
+                            <input type="email" value="investidor@investiecresce.ao" readonly class="w-full bg-gray-900 border border-gray-800 rounded p-2.5 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block">Segurança 2FA</label>
+                            <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded border border-emerald-500/30">
+                                <i class="fa-solid fa-check-double mr-1"></i> Autenticação Ativada
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Métricas Globais do Administrador</h3>
+                        <div class="bg-black/40 p-4 rounded-xl border border-gray-800 space-y-3 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Total de Depósitos Ativos:</span>
+                                <span class="text-brand-neon font-bold">14.290.000,00 Kz</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Total de Levantamentos Pagos:</span>
+                                <span class="text-white font-bold">8.120.000,00 Kz</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Servidores do Sistema:</span>
+                                <span class="text-emerald-400 font-bold">100% Online</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-dark border-t border-gray-800 py-6 mt-12 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>© 2026 <strong>Investi e Cresce Money</strong> - Todos os direitos reservados.</p>
+            <p>Plataforma de Investimento Automático de Alta Performance. Regulado segundo normas locais em Angola.</p>
+        </div>
+    </footer>
+
+    <!-- LÓGICA JAVASCRIPT INTEGRADA -->
+    <script>
+        // Variáveis de Estado
+        let saldoAtual = 8500.00;
+        let ganhoAoVivo = 348.25;
+
+        // Alternador de Abas do Menu
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('block');
+            });
+
+            const selectedTab = document.getElementById('tab-' + tabId);
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
+                selectedTab.classList.add('block');
+            }
+
+            // Atualiza botões ativos
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-card', 'text-brand-neon');
+            });
+        }
+
+        // Copiar Texto para área de transferência
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            showToast('Copiado com sucesso: ' + text, 'success');
+        }
+
+        // Notificações Toast Flutuantes
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `p-3 rounded-lg text-xs font-bold text-white shadow-xl flex items-center space-x-2 transition-all transform duration-300 border ${
+                type === 'success' ? 'bg-brand-dark border-brand-green text-brand-neon' : 'bg-gray-800 border-gray-700'
+            }`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info text-brand-green"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
+
+        // Simulação de Crescimento Diário em Tempo Real (Contador Automático)
+        setInterval(() => {
+            ganhoAoVivo += 0.05;
+            const liveElement = document.getElementById('live-counter');
+            if (liveElement) {
+                liveElement.innerText = '+' + ganhoAoVivo.toFixed(2) + ' Kz';
+            }
+        }, 1500);
+
+        // Gerador de Notificações Automáticas de Outros Utilizadores (Simulação Realista)
+        const nomesSimulados = ['+244 923***102', '+244 945***891', '+244 912***443', '+244 931***002'];
+        const operacoesSimuladas = [
+            { tipo: 'Depósito', valor: '1.000,00 Kz', metodo: 'Entidade/Ref' },
+            { tipo: 'Levantamento', valor: '3.000,00 Kz', metodo: 'Express' },
+            { tipo: 'Levantamento', valor: '6.500,00 Kz', metodo: 'IBAN BAI' },
+            { tipo: 'Depósito', valor: '1.000,00 Kz', metodo: 'IBAN BIC' }
+        ];
+
+        function populateTransactions() {
+            const tbody = document.getElementById('live-transactions-table');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const user = nomesSimulados[Math.floor(Math.random() * nomesSimulados.length)];
+                const op = operacoesSimuladas[Math.floor(Math.random() * operacoesSimuladas.length)];
+                
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-800 hover:bg-black/20';
+                row.innerHTML = `
+                    <td class="p-3 font-mono">${user}</td>
+                    <td class="p-3 font-semibold ${op.tipo === 'Depósito' ? 'text-brand-green' : 'text-emerald-400'}">${op.tipo}</td>
+                    <td class="p-3 font-bold text-white">${op.valor}</td>
+                    <td class="p-3 text-gray-400">${op.metodo}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-brand-green/20 text-brand-neon rounded text-[10px]">Concluído</span></td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        // Notificação Dinâmica Popup
+        setInterval(() => {
+            const user = nomesSimulados[Math.floor(Math.random() * nomesSimulados.length)];
+            const op = operacoesSimuladas[Math.floor(Math.random() * operacoesSimuladas.length)];
+            showToast(`${user} acabou de efetuar um ${op.tipo} de ${op.valor}`, 'success');
+        }, 12000);
+
+        // Submissão do Depósito
+        function confirmDeposit(e) {
+            e.preventDefault();
+            showToast('Comprovativo enviado! O valor de 1.000 Kz será creditado em instantes.', 'success');
+            setTimeout(() => switchTab('dashboard'), 2000);
+        }
+
+        // Processamento de Levantamento (Validação Mínima de 3000 Kz)
+        function processWithdrawal(e) {
+            e.preventDefault();
+            const amountInput = document.getElementById('withdraw-amount');
+            const valor = parseFloat(amountInput.value);
+
+            if (valor < 3000) {
+                showToast('Erro: O valor mínimo de levantamento é de 3.000 Kz.', 'info');
+                return;
+            }
+
+            if (valor > saldoAtual) {
+                showToast('Erro: Saldo insuficiente para efetuar o saque.', 'info');
+                return;
+            }
+
+            saldoAtual -= valor;
+            document.getElementById('saldo-display').innerText = saldoAtual.toLocaleString('pt-AO') + ',00 Kz';
+            document.getElementById('saldo-levantamento-display').innerText = saldoAtual.toLocaleString('pt-AO') + ',00 Kz';
+
+            showToast(`Solicitação de ${valor.toLocaleString('pt-AO')} Kz enviada com sucesso para o seu IBAN!`, 'success');
+            setTimeout(() => switchTab('dashboard'), 2000);
+        }
+
+        // Renderização do Gráfico de Crescimento (Chart.js)
+        window.onload = function() {
+            populateTransactions();
+
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Dia 1', 'Dia 2', 'Dia 3', 'Dia 4', 'Dia 5', 'Dia 6', 'Hoje (Ao Vivo)'],
+                    datasets: [{
+                        label: 'Crescimento do Saldo (Kz)',
+                        data: [1000, 2500, 4000, 5500, 7000, 8000, 8500],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#00ff87'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#9ca3af' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#1f2937' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        y: {
+                            grid: { color: '#1f2937' },
+                            ticks: { color: '#9ca3af' }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
+
